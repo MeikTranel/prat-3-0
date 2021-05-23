@@ -1,0 +1,60 @@
+name: "CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+
+jobs:
+  BuildBCC:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install 'luarocks'
+        run: sudo apt-get install luarocks
+      - name: Install 'luacheck'
+        run: luarocks install --local luacheck
+      - uses: actions/checkout@v2
+      - uses: BigWigsMods/packager@v1
+        name: BuildPackage
+        with:
+          args: -g bcc -m .pkgmeta -d
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bcc
+          path: './.release/*.zip'
+          if-no-files-found: error
+  BuildClassic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install 'luarocks'
+        run: sudo apt-get install luarocks
+      - name: Install 'luacheck'
+        run: luarocks install --local luacheck
+      - uses: actions/checkout@v2
+      - uses: BigWigsMods/packager@v1
+        name: BuildPackage
+        with:
+          args: -g classic -m .pkgmeta -d
+      - uses: actions/upload-artifact@v2
+        with:
+          name: classic
+          path: './.release/*.zip'
+          if-no-files-found: error
+  BuildRetail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install 'luarocks'
+        run: sudo apt-get install luarocks
+      - name: Install 'luacheck'
+        run: luarocks install --local luacheck
+      - uses: actions/checkout@v2
+      - uses: BigWigsMods/packager@v1
+        name: BuildPackage
+        with:
+          args: -g retail -m .pkgmeta -d
+      - uses: actions/upload-artifact@v2
+        with:
+          name: retail
+          path: './.release/*.zip'
+          if-no-files-found: error
